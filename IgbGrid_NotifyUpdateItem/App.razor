@@ -1,0 +1,55 @@
+﻿<IgbGrid Data="_dataList"
+         AutoGenerate="false"
+         PrimaryKey="ID"
+         Height="500px"
+         @ref="_grid1">
+    <IgbColumn Field="@nameof(RowData.ID)" Header="ID" />
+    <IgbColumn Field="@nameof(RowData.Value1)" Header="Value1" />
+    <IgbColumn Field="@nameof(RowData.Value2)" Header="Value2" />
+    <IgbColumn Field="@nameof(RowData.Value3)" Header="Value3" />
+</IgbGrid>
+
+<button @onclick="UpdateItem">
+    ID=id5の行のValue1を変更
+</button>
+
+@code {
+    private IgbGrid? _grid1;
+    private List<RowData>? _dataList;
+
+    private void UpdateItem()
+    {
+        if (_dataList != null)
+        {
+            RowData? rowToUpdate = _dataList.Find(item => item.ID == "id5");
+
+            if (rowToUpdate != null)
+            {
+                int indexToUpdate = _dataList.IndexOf(rowToUpdate);
+                rowToUpdate.Value1 = "Updated";
+
+                if (_grid1 != null)
+                {
+                    _grid1.NotifyUpdateItem(_dataList, indexToUpdate, _dataList[indexToUpdate]); 
+                }
+            }
+        }
+    }
+
+    protected override void OnInitialized()
+    {
+        _dataList = new List<RowData>();
+        for (int i = 0; i < 100; i++)
+        {
+            _dataList.Add(new RowData() { ID = "id" + i, Value1 = "item" + i, Value2 = "item" + i, Value3 = "item" + i });
+        }
+    }
+
+    public class RowData
+    {
+        public string? ID { get; set; }
+        public string? Value1 { get; set; }
+        public string? Value2 { get; set; }
+        public string? Value3 { get; set; }
+    }
+}
